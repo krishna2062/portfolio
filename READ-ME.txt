@@ -1,0 +1,11 @@
+  =>  Template Name    : my
+
+  =>  Template Link    : https://krishnabhandari.com/bootstrap-cv-resume-template
+
+  =>  Template License : https://krishnabhandari.com/license (or read the LICENSE.txt file)
+
+  =>  Template Author  : krishna
+
+  =>  Author Website   : https://krishnabhandari.com
+
+  =>  About HTML Codex : HTML Codex is one of the top creators and publishers of Free HTML templates, HTML landing pages, HTML email templates and HTML snippets in the world. Read more at ( https://krishnabhandari.com/about-us )
