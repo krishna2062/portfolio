@@ -1,0 +1,247 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "basis33";
+  src: url("https://db.onlinewebfonts.com/t/d08bafd725a4cfc309efb5a88e0b63a5.woff2") format("woff2"),
+       url("https://db.onlinewebfonts.com/t/d08bafd725a4cfc309efb5a88e0b63a5.woff") format("woff"),
+       url("https://db.onlinewebfonts.com/t/d08bafd725a4cfc309efb5a88e0b63a5.ttf") format("truetype");
+  font-display: swap;
+}
+
+@layer base {
+  html {
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #000000;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.font-pixel {
+  font-family: 'basis33', monospace;
+}
+
+/* ==========================================================================
+   PRINT / PDF STYLESHEET (A4 OPTIMIZED)
+   ========================================================================== */
+@media print {
+  @page {
+    size: A4;
+    margin: 10mm 12mm;
+  }
+
+  /* 1. Hide Website-Only Elements */
+  nav,
+  footer,
+  video,
+  button,
+  .no-print,
+  .fixed,
+  [class*="backdrop-blur"],
+  [class*="blur-"] {
+    display: none !important;
+  }
+
+  /* 2. Page & Root Resets */
+  html,
+  body,
+  #root,
+  main {
+    background: #ffffff !important;
+    color: #111111 !important;
+    min-height: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* 3. Resume Container Reset */
+  .resume-page-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .resume-document {
+    background: #ffffff !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    color: #111111 !important;
+  }
+
+  /* 4. Typography & Color Adjustments */
+  .resume-name {
+    color: #000000 !important;
+    font-size: 24pt !important;
+    font-weight: 800 !important;
+    line-height: 1.1 !important;
+  }
+
+  .resume-title {
+    color: #dc2626 !important;
+    font-size: 11pt !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.1em !important;
+    margin-top: 2pt !important;
+  }
+
+  .resume-section-title {
+    color: #dc2626 !important;
+    font-size: 10pt !important;
+    font-weight: 700 !important;
+    border-bottom: 1.5pt solid #e5e7eb !important;
+    padding-bottom: 3pt !important;
+    margin-bottom: 6pt !important;
+  }
+
+  .resume-label {
+    color: #4b5563 !important;
+    font-size: 8.5pt !important;
+    font-weight: 600 !important;
+  }
+
+  .resume-val {
+    color: #111111 !important;
+    font-size: 9pt !important;
+  }
+
+  .resume-bold {
+    color: #111111 !important;
+  }
+
+  .resume-divider {
+    color: #9ca3af !important;
+  }
+
+  .resume-org {
+    color: #000000 !important;
+    font-size: 12pt !important;
+    font-weight: 700 !important;
+  }
+
+  .resume-role {
+    color: #b91c1c !important;
+    font-size: 10pt !important;
+    font-weight: 600 !important;
+  }
+
+  .resume-badge {
+    background: #f3f4f6 !important;
+    color: #1f2937 !important;
+    border: 1px solid #d1d5db !important;
+    font-size: 8pt !important;
+    padding: 1pt 5pt !important;
+  }
+
+  .resume-tag {
+    background: #f3f4f6 !important;
+    color: #111111 !important;
+    border: 1px solid #e5e7eb !important;
+    font-size: 8pt !important;
+  }
+
+  .resume-bullet {
+    color: #dc2626 !important;
+  }
+
+  .resume-summary-box,
+  .resume-card,
+  .resume-skill-box {
+    background: #f9fafb !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 6pt !important;
+    padding: 6pt 8pt !important;
+    color: #1f2937 !important;
+  }
+
+  .resume-card-header {
+    border-bottom: 1px solid #e5e7eb !important;
+    padding-bottom: 4pt !important;
+    margin-bottom: 4pt !important;
+  }
+
+  .resume-edu-title {
+    color: #000000 !important;
+    font-size: 10pt !important;
+    font-weight: 700 !important;
+  }
+
+  .resume-edu-school {
+    color: #4b5563 !important;
+    font-size: 8.5pt !important;
+  }
+
+  .resume-proj-name {
+    color: #000000 !important;
+    font-size: 10pt !important;
+    font-weight: 700 !important;
+  }
+
+  .resume-proj-cat {
+    color: #dc2626 !important;
+    font-size: 7.5pt !important;
+  }
+
+  .resume-proj-desc {
+    color: #374151 !important;
+    font-size: 8pt !important;
+  }
+
+  .resume-proj-stack {
+    color: #4b5563 !important;
+    font-size: 7.5pt !important;
+  }
+
+  .resume-int-title {
+    color: #000000 !important;
+    font-size: 9pt !important;
+    font-weight: 700 !important;
+  }
+
+  .resume-int-desc {
+    color: #4b5563 !important;
+    font-size: 8pt !important;
+  }
+
+  .resume-footer {
+    border-top: 1px solid #e5e7eb !important;
+    padding-top: 6pt !important;
+    color: #4b5563 !important;
+    font-size: 8pt !important;
+  }
+
+  .resume-email-link {
+    color: #111111 !important;
+    text-decoration: underline !important;
+  }
+
+  /* 5. Page Break Rules */
+  .resume-section,
+  .resume-card,
+  .resume-skill-box {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+}
