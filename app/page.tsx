@@ -45,13 +45,13 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Floating Badges (Desktop Only) */}
+            {/* Floating Badges (Responsive) */}
             <motion.div
               variants={fadeIn("right", 0.6)}
               initial="hidden"
               animate="show"
               exit="hidden"
-              className="absolute left-0 bottom-32 backdrop-blur-md bg-white/5 border border-white/10 rounded-lg p-3 text-xs text-white/80 z-20 hidden lg:block"
+              className="absolute left-2 lg:left-0 bottom-28 lg:bottom-32 backdrop-blur-md bg-white/5 border border-white/10 rounded-lg p-2 sm:p-3 text-[10px] sm:text-xs text-white/80 z-20"
             >
               <span className="text-[#f13024]">async</span> function fetchTelemetry()...
             </motion.div>
@@ -61,9 +61,54 @@ const Home = () => {
               initial="hidden"
               animate="show"
               exit="hidden"
-              className="absolute right-12 top-1/3 backdrop-blur-md bg-white/5 border border-white/10 rounded-lg p-3 text-xs text-white/80 z-20 hidden lg:block"
+              className="absolute right-2 lg:right-12 top-1/3 backdrop-blur-md bg-white/5 border border-white/10 rounded-lg p-2 sm:p-3 text-[10px] sm:text-xs text-white/80 z-20"
             >
               IoT Sensor Data
+            </motion.div>
+
+            {/* New Block 1 - Developer Journey (Top Left) */}
+            <motion.div
+              variants={fadeIn("down", 0.8)}
+              initial="hidden"
+              animate="show"
+              exit="hidden"
+              className="absolute top-12 lg:top-16 left-4 lg:-left-4 backdrop-blur-md bg-white/5 border border-white/10 rounded-lg p-2 sm:p-3 flex flex-col gap-1 shadow-lg z-30"
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] sm:text-xs font-semibold text-white leading-tight">{'</>'} Developer Journey</span>
+              </div>
+              <span className="text-[8px] sm:text-[10px] text-white/70 leading-tight">Try &rarr; Fail &rarr; Learn &rarr; Build &rarr; Repeat</span>
+              <span className="text-[8px] text-[#f13024] font-medium mt-0.5">Failed yesterday. Better today.</span>
+            </motion.div>
+
+            {/* New Block 2 - Code Object (Top Right) */}
+            <motion.div
+              variants={fadeIn("up", 0.9)}
+              initial="hidden"
+              animate="show"
+              exit="hidden"
+              className="absolute top-6 lg:top-10 right-8 lg:right-6 backdrop-blur-md bg-white/5 border border-white/10 rounded-lg p-2 sm:p-3 flex flex-col shadow-lg z-30 font-mono text-[8px] sm:text-[10px]"
+            >
+              <span className="text-pink-400">const <span className="text-blue-300">developer</span> = {'{'}</span>
+              <div className="pl-3 flex flex-col">
+                <span className="text-white/80">learn: <span className="text-orange-300">true</span>,</span>
+                <span className="text-white/80">fail: <span className="text-orange-300">true</span>,</span>
+                <span className="text-white/80">improve: <span className="text-orange-300">true</span></span>
+              </div>
+              <span className="text-pink-400">{'}'};</span>
+            </motion.div>
+
+            {/* New Block 3 - Build Activity (Bottom Right) */}
+            <motion.div
+              variants={fadeIn("left", 1.0)}
+              initial="hidden"
+              animate="show"
+              exit="hidden"
+              className="absolute bottom-12 lg:bottom-16 right-4 lg:-right-6 backdrop-blur-md bg-white/5 border border-white/10 rounded-lg p-2 sm:p-3 flex flex-col shadow-lg z-30 font-mono"
+            >
+              <span className="text-[9px] sm:text-[11px] text-white/80 leading-tight">{'>'} npm run build</span>
+              <span className="text-[8px] sm:text-[10px] text-green-400 leading-tight mt-1">✓ compiled successfully</span>
+              <span className="text-[8px] sm:text-[10px] text-white/50 leading-tight mt-0.5">→ pushing next update...</span>
             </motion.div>
 
             <motion.div 
