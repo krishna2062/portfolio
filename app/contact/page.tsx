@@ -34,9 +34,9 @@ const Contact = () => {
 
     setIsLoading(true);
 
-    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "";
-    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "";
-    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "";
+    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_enwlwan";
+    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "template_hgrnf5r";
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "2F8kgU3tj7fxxsicn";
 
     try {
       await emailjs.send(
