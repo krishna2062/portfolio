@@ -43,12 +43,31 @@
   color: #f13024;
 }
 
+/* Enable smooth touch scrolling across all pages */
+html, body {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Custom crimson scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0c;
+}
+::-webkit-scrollbar-thumb {
+  background: #f13024;
+  border-radius: 9999px;
+}
+
 @layer base {
   body {
-    @apply bg-secondary overflow-hidden leading-relaxed;
+    @apply bg-secondary leading-relaxed;
   }
   .page {
-    @apply w-full h-screen overflow-hidden;
+    @apply w-full min-h-screen overflow-y-auto overflow-x-hidden relative flex flex-col justify-between;
   }
   .h1 {
     @apply text-[35px] leading-tight md:text-[60px] md:leading-[1.3] mb-8 font-semibold;

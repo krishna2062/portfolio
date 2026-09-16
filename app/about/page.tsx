@@ -1,238 +1,113 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useState } from "react";
-import CountUp from "react-countup";
-import {
-  FaCss3,
-  FaFigma,
-  FaHtml5,
-  FaJs,
-  FaReact,
-  FaWordpress,
-} from "react-icons/fa";
-import type { IconType } from "react-icons";
-import { SiFramer, SiNextdotjs } from "react-icons/si";
-import { TbBrandAdobePhotoshop, TbBrandAdobeXd } from "react-icons/tb";
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { fadeIn } from '@/variants';
+import CountUp from 'react-countup';
 
-import Avatar from "@/components/Avatar";
-import Circles from "@/components/Circles";
-import { fadeIn } from "@/variants";
-
-type AboutInfoItem = {
-  title: string;
-  stage?: string;
-  icons?: IconType[];
-};
-
-type AboutDataItem = {
-  title: string;
-  info: AboutInfoItem[];
-};
-
-const aboutData: AboutDataItem[] = [
-  {
-    title: "skills",
-    info: [
-      {
-        title: "Web Development",
-        icons: [
-          FaHtml5,
-          FaCss3,
-          FaJs,
-          FaReact,
-          SiNextdotjs,
-          SiFramer,
-          FaWordpress,
-        ],
-      },
-      {
-        title: "UI/UX Design",
-        icons: [FaFigma, TbBrandAdobeXd, TbBrandAdobePhotoshop],
-      },
-    ],
-  },
-  {
-    title: "awards",
-    info: [
-      {
-        title: "Webby Awards - Honoree",
-        stage: "2011 - 2012",
-      },
-      {
-        title: "Adobe Design Achievement Awards - Finalist",
-        stage: "2009 - 2010",
-      },
-    ],
-  },
-  {
-    title: "experience",
-    info: [
-      {
-        title: "UX/UI Designer - XYZ Company",
-        stage: "2012 - 2023",
-      },
-      {
-        title: "Web Developer - ABC Agency",
-        stage: "2010 - 2012",
-      },
-      {
-        title: "Intern - DEF Corporation",
-        stage: "2008 - 2010",
-      },
-    ],
-  },
-  {
-    title: "credentials",
-    info: [
-      {
-        title: "Web Development - ABC University, LA, CA",
-        stage: "2011",
-      },
-      {
-        title: "Computer Science Diploma - AV Technical Institute",
-        stage: "2009",
-      },
-      {
-        title: "Certified Graphic Designer - ABC Institute, Los Angeles, CA",
-        stage: "2006",
-      },
-    ],
-  },
-];
-
-const About = () => {
-  const [index, setIndex] = useState(0);
+export default function About() {
+  const [activeTab, setActiveTab] = useState<'experience' | 'status'>('experience');
 
   return (
-    <div className="h-full bg-primary/30 py-32 text-center xl:text-left">
-      <Circles />
-
-      <motion.div
-        variants={fadeIn("right", 0.2)}
-        initial="hidden"
-        animate="show"
-        exit="hidden"
-        className="hidden xl:flex absolute bottom-0 -left-92.5"
-      >
-        <Avatar />
-      </motion.div>
-
-      <div className="container mx-auto h-full flex flex-col items-center xl:flex-row gap-x-6">
-        <div className="flex-1 flex flex-col justify-center">
-          <motion.h2
-            variants={fadeIn("right", 0.2)}
+    <div className="min-h-screen h-auto bg-primary/30 pt-24 lg:pt-36 pb-28 lg:pb-20 px-4 sm:px-8 lg:px-16 flex items-center relative overflow-y-auto overflow-x-hidden">
+      <div className="container mx-auto max-w-7xl">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+          
+          {/* LEFT: Dedicated Avatar Card (Zero Overlap) */}
+          <motion.div 
+            variants={fadeIn('right', 0.2)}
             initial="hidden"
             animate="show"
-            exit="hidden"
-            className="h2"
+            className="lg:col-span-5 relative w-full h-[300px] sm:h-[400px] lg:h-[550px] rounded-2xl bg-white/5 border border-white/10 flex items-end justify-center overflow-hidden mb-6 lg:mb-0"
           >
-            Captivating <span className="text-accent">stories</span> birth
-            magnificent designs.
-          </motion.h2>
-          <motion.p
-            variants={fadeIn("right", 0.4)}
+            <img 
+              src="/assets/krishna.png" 
+              alt="Krishna Prasad Bhandari" 
+              className="max-h-full object-contain object-bottom select-none pointer-events-none"
+              style={{
+                maskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)',
+              }}
+            />
+          </motion.div>
+
+          {/* RIGHT: Content, Counters & Tabs */}
+          <motion.div 
+            variants={fadeIn('left', 0.4)}
             initial="hidden"
             animate="show"
-            className="max-w-125 mx-auto xl:mx-0 mb-6 xl:mb-12 px-2 xl:px-0"
+            className="lg:col-span-7 flex flex-col justify-center space-y-4 lg:space-y-6"
           >
-            10 years ago, I begin freelancing as a developer. Since then,
-            I&apos;ve done remote work for agencies, consulted for startups, and
-            collabrated on digital products for business and consumer use.
-          </motion.p>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight">
+              Passionate software <br className="hidden sm:block" />
+              <span className="text-[#f13024]">engineer based in Nepal.</span>
+            </h2>
 
-          <motion.div
-            variants={fadeIn("right", 0.6)}
-            initial="hidden"
-            animate="show"
-            className="hidden md:flex md:max-w-xl xl:max-w-none mx-auto xl:mx-0 mb-8"
-          >
-            <div className="flex flex-1 xl:gap-x-6">
-              <div className="relative flex-1 after:w-px after:h-full after:bg-white/10 after:absolute after:top-0 after:right-0">
-                <div className="text-2xl xl:text-4xl font-extrabold text-accent mb-2">
-                  <CountUp start={0} end={10} duration={5} />
-                </div>
-                <div className="text-xs uppercase tracking-[1px] leading-[1.4] max-w-25">
-                  Years of experience.
-                </div>
+            <p className="text-white/70 text-sm sm:text-base leading-relaxed">
+              Focused on building scalable enterprise solutions, performant REST APIs, clean database designs, and hardware-software telemetry integrations.
+            </p>
+
+            {/* Counters */}
+            <div className="grid grid-cols-3 gap-2 sm:gap-4 py-4 border-y border-white/10 text-center sm:text-left">
+              <div>
+                <h4 className="text-2xl sm:text-3xl font-extrabold text-[#f13024]">
+                  <CountUp start={0} end={2} duration={5} />+
+                </h4>
+                <p className="text-[10px] sm:text-xs uppercase tracking-wider text-white/60 mt-1">Years of Experience</p>
               </div>
-
-              <div className="relative flex-1 after:w-px after:h-full after:bg-white/10 after:absolute after:top-0 after:right-0">
-                <div className="text-2xl xl:text-4xl font-extrabold text-accent mb-2">
-                  <CountUp start={0} end={250} duration={5} />
-                </div>
-                <div className="text-xs uppercase tracking-[1px] leading-[1.4] max-w-25">
-                  Satisfied clients.
-                </div>
+              <div>
+                <h4 className="text-2xl sm:text-3xl font-extrabold text-[#f13024]">
+                  <CountUp start={0} end={10} duration={5} />+
+                </h4>
+                <p className="text-[10px] sm:text-xs uppercase tracking-wider text-white/60 mt-1">Completed Projects</p>
               </div>
-
-              <div className="relative flex-1 after:w-px after:h-full after:bg-white/10 after:absolute after:top-0 after:right-0">
-                <div className="text-2xl xl:text-4xl font-extrabold text-accent mb-2">
-                  <CountUp start={0} end={650} duration={5} />
-                </div>
-                <div className="text-xs uppercase tracking-[1px] leading-[1.4] max-w-25">
-                  Finished projects.
-                </div>
-              </div>
-
-              <div className="relative flex-1">
-                <div className="text-2xl xl:text-4xl font-extrabold text-accent mb-2">
-                  <CountUp start={0} end={8} duration={5} />
-                </div>
-                <div className="text-xs uppercase tracking-[1px] leading-[1.4] max-w-25">
-                  Winning awards.
-                </div>
+              <div>
+                <h4 className="text-2xl sm:text-3xl font-extrabold text-[#f13024]">
+                  <CountUp start={0} end={8} duration={5} />+
+                </h4>
+                <p className="text-[10px] sm:text-xs uppercase tracking-wider text-white/60 mt-1">Tech Mastered</p>
               </div>
             </div>
-          </motion.div>
-        </div>
 
-        <motion.div
-          variants={fadeIn("left", 0.4)}
-          initial="hidden"
-          animate="show"
-          exit="hidden"
-          className="flex flex-col w-full xl:max-w-[48%] h-120"
-        >
-          <div className="flex gap-x-4 xl:gap-x-8 mx-auto xl:mx-0 mb-4">
-            {aboutData.map((item, itemI) => (
-              <div
-                key={itemI}
-                className={`${
-                  index === itemI &&
-                  "text-accent after:w-full after:bg-accent after:transition-all after:duration-300"
-                } cursor-pointer capitalize xl:text-lg relative after:w-8 after:h-0.5 after:bg-white after:absolute after:-bottom-1 after:left-0`}
-                onClick={() => setIndex(itemI)}
+            {/* Tabs Navigation */}
+            <div className="flex gap-4 sm:gap-6 border-b border-white/10 pb-2">
+              <button 
+                onClick={() => setActiveTab('experience')}
+                className={`text-xs sm:text-sm font-semibold pb-1 transition-colors relative ${activeTab === 'experience' ? 'text-[#f13024]' : 'text-white/60 hover:text-white'}`}
               >
-                {item.title}
-              </div>
-            ))}
-          </div>
-
-          <div className="py-2 xl:py-6 flex flex-col gap-y-2 xl:gap-y-4 items-center xl:items-start">
-            {aboutData[index].info.map((item, itemI) => (
-              <div
-                key={itemI}
-                className="flex-1 flex flex-col md:flex-row max-w-max gap-x-2 items-center text-center text-white/60"
+                Experience
+                {activeTab === 'experience' && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#f13024]" />}
+              </button>
+              <button 
+                onClick={() => setActiveTab('status')}
+                className={`text-xs sm:text-sm font-semibold pb-1 transition-colors relative ${activeTab === 'status' ? 'text-[#f13024]' : 'text-white/60 hover:text-white'}`}
               >
-                <div className="font-light mb-2 md:mb-0">{item.title}</div>
-                <div className="hidden md:flex">-</div>
-                <div>{item.stage}</div>
+                Status
+                {activeTab === 'status' && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#f13024]" />}
+              </button>
+            </div>
 
-                <div className="flex gap-x-4">
-                  {item.icons?.map((Icon, iconI) => (
-                    <div key={iconI} className="text-2xl text-white">
-                      <Icon />
-                    </div>
-                  ))}
+            {/* Tab Contents */}
+            <div className="pt-2 text-sm text-white/80 min-h-[100px] lg:min-h-[80px]">
+              {activeTab === 'experience' ? (
+                <div>
+                  <p className="font-semibold text-white">Backend Developer & Tech Lead — NeoVertex Solution</p>
+                  <p className="text-xs text-[#f13024] mt-0.5">Primary Tech: C#, ASP.NET Core, SQL Server, EF Core</p>
+                  <p className="text-xs text-white/60 mt-2">Designing scalable APIs, authentication layers, and enterprise services.</p>
                 </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+              ) : (
+                <div>
+                  <p className="font-semibold text-white">BE in Computer Engineering (4th Semester)</p>
+                  <p className="text-xs text-[#f13024] mt-0.5">Lumbini Engineering College (Pokhara University)</p>
+                  <p className="text-xs text-white/60 mt-2">Focusing on Operating Systems, Database Architecture, and Embedded IoT.</p>
+                </div>
+              )}
+            </div>
+
+          </motion.div>
+
+        </div>
       </div>
     </div>
   );
-};
-
-export default About;
+}

@@ -1,44 +1,32 @@
 import Link from "next/link";
 import type { IconType } from "react-icons";
 import {
-  RiYoutubeLine,
-  RiInstagramLine,
-  RiFacebookLine,
-  RiDribbbleLine,
   RiGithubLine,
-  RiPinterestLine,
+  RiLinkedinLine,
+  RiGlobalLine,
+  RiMailLine,
 } from "react-icons/ri";
 
 export const socialData: { name: string; link: string; Icon: IconType }[] = [
   {
-    name: "YouTube",
-    link: "https://youtube.com",
-    Icon: RiYoutubeLine,
-  },
-  {
-    name: "Instagram",
-    link: "https://instagram.com",
-    Icon: RiInstagramLine,
-  },
-  {
-    name: "Facebook",
-    link: "https://facebook.com",
-    Icon: RiFacebookLine,
-  },
-  {
-    name: "Dribbble",
-    link: "https://dribbble.com",
-    Icon: RiDribbbleLine,
-  },
-  {
-    name: "Pinterest",
-    link: "https://pinterest.com",
-    Icon: RiPinterestLine,
-  },
-  {
     name: "Github",
-    link: "https://github.com/sanidhyy/modern-portfolio",
+    link: "https://github.com/krishna2062",
     Icon: RiGithubLine,
+  },
+  {
+    name: "LinkedIn",
+    link: "https://www.linkedin.com/in/krishna-bhandari-8b0273333",
+    Icon: RiLinkedinLine,
+  },
+  {
+    name: "Website",
+    link: "https://www.krishnabhandari01.com.np",
+    Icon: RiGlobalLine,
+  },
+  {
+    name: "Contact",
+    link: "mailto:contact@krishnabhandari01.com.np",
+    Icon: RiMailLine,
   },
 ];
 
@@ -49,17 +37,13 @@ const Socials = () => {
         <Link
           key={i}
           title={social.name}
+          aria-label={social.name}
           href={social.link}
           target="_blank"
-          rel="noreferrer noopener"
-          className={`${
-            social.name === "Github"
-              ? "bg-accent rounded-full p-1.25 hover:text-white"
-              : "hover:text-accent"
-          } transition-all duration-300`}
+          rel="noopener noreferrer"
+          className="hover:text-[#f13024] hover:scale-110 transition-all duration-300 text-white/80"
         >
           <social.Icon aria-hidden />
-          <span className="sr-only">{social.name}</span>
         </Link>
       ))}
     </div>
