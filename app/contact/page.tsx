@@ -51,7 +51,7 @@ const Contact = () => {
         publicKey
       );
 
-      toast.success("Thank you! Your message has been sent successfully.");
+      toast.success("Message sent successfully! I’ll get back to you soon.");
       setForm({ name: "", email: "", subject: "", message: "" });
     } catch (error) {
       console.error('EmailJS Error:', error);
