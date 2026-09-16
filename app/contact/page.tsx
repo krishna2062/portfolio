@@ -27,7 +27,7 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!form.name || !form.email || !form.message) {
+    if (!form.name || !form.email || !form.subject || !form.message) {
       toast.error("Please fill in all required fields.");
       return;
     }
@@ -55,7 +55,7 @@ const Contact = () => {
       setForm({ name: "", email: "", subject: "", message: "" });
     } catch (error) {
       console.error('EmailJS Error:', error);
-      toast.error("Oops! Something went wrong. Please try again later.");
+      toast.error("Unable to send your message right now. Please try again or contact me directly.");
     } finally {
       setIsLoading(false);
     }
@@ -168,7 +168,8 @@ const Contact = () => {
               <input 
                 type="text" 
                 name="subject"
-                placeholder="Subject" 
+                placeholder="Subject *" 
+                required 
                 className="w-full min-h-[48px] bg-white/5 border border-white/20 focus:border-[#f13024] rounded-lg px-4 py-3 text-white outline-none transition-colors"
                 value={form.subject}
                 onChange={handleChange}
