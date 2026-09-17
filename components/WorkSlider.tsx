@@ -122,9 +122,9 @@ const WorkSlider = () => {
                       className="object-cover transition-transform duration-500 group-hover:scale-110"
                     />
 
-                    {/* Mobile Project Title Overlay */}
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-3 pt-12 lg:hidden z-[5] pointer-events-none transition-opacity duration-300 group-hover:opacity-0">
-                      <h3 className="text-white text-sm sm:text-base font-medium truncate drop-shadow-md">
+                    {/* Permanent Mobile Project Title */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-2 pt-10 z-[20] pointer-events-none flex flex-col justify-end lg:hidden">
+                      <h3 className="text-white text-xs sm:text-sm font-semibold truncate drop-shadow-md text-center w-full">
                         {image.title}
                       </h3>
                     </div>
