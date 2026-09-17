@@ -28,8 +28,7 @@ const Services = () => {
               initial="hidden"
               animate="show"
               exit="hidden"
-              className="mb-4 max-w-100 mx-auto lg:mx-0 text-sm sm:text-base text-white/70"
-            >
+              className="mb-4 max-w-100 mx-auto lg:mx-0 text-sm sm:text-base text-white/70">
               I build reliable, scalable, and user-focused digital solutions that help businesses turn ideas into practical software.
             </motion.p>
           </div>
