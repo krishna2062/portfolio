@@ -6,6 +6,7 @@ import {
   RxDesktop,
   RxReader,
   RxRocket,
+  RxCode,
   RxArrowTopRight,
 } from "react-icons/rx";
 import type { IconType } from "react-icons";
@@ -23,23 +24,33 @@ const serviceData: {
 }[] = [
   {
     Icon: RxDesktop,
-    title: "Full Stack Web Development",
-    description: "End-to-end React SPA frontend with scalable C# / ASP.NET Core backends.",
+    title: "Web Development",
+    description: "Modern, responsive, and high-performance websites built to represent your business professionally and provide a smooth experience across desktop and mobile devices.",
   },
   {
     Icon: RxRocket,
-    title: "Backend Systems & REST APIs",
-    description: "Secure authentication, RBAC, high-speed API performance, and micro-interactions.",
+    title: "Backend Development",
+    description: "Secure and scalable backend systems designed to handle business logic, data processing, authentication, APIs, and real-world application requirements.",
+  },
+  {
+    Icon: RxCrop,
+    title: "Full-Stack Development",
+    description: "Complete web applications built from frontend to backend, connecting intuitive user interfaces with reliable APIs and database systems.",
   },
   {
     Icon: RxPencil2,
-    title: "Frontend & UI Engineering",
-    description: "Fluid, responsive, and animated user interfaces with Tailwind and Framer Motion.",
+    title: "Custom Software Development",
+    description: "Business-specific software solutions designed around real workflows, helping organizations reduce manual work and manage their operations more efficiently.",
   },
   {
     Icon: RxReader,
-    title: "Database Design & IoT Telemetry",
-    description: "Relational/NoSQL data schemas and sub-second live sensor feeds via WebSockets.",
+    title: "Database Solutions",
+    description: "Well-structured and reliable database solutions for applications that require secure data storage, efficient queries, relationships, and scalable data management.",
+  },
+  {
+    Icon: RxCode,
+    title: "API Development & Integration",
+    description: "Clean and reliable APIs that allow applications, services, and platforms to communicate securely and efficiently.",
   },
 ];
 

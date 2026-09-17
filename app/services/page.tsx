@@ -30,8 +30,7 @@ const Services = () => {
               exit="hidden"
               className="mb-4 max-w-100 mx-auto lg:mx-0 text-sm sm:text-base text-white/70"
             >
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur
-              tempora eligendi, quisquam tempore sint reiciendis.
+              I build reliable, scalable, and user-focused digital solutions that help businesses turn ideas into practical software.
             </motion.p>
           </div>
 
