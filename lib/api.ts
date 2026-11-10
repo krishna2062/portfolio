@@ -198,7 +198,13 @@ export const api = {
     const token = this.getToken();
     const isFormData = typeof FormData !== "undefined" && options.body instanceof FormData;
     const headers: Record<string, string> = {
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(token
+        ? {
+            Authorization: `Bearer ${token}`,
+            "x-access-token": token,
+            "x-authorization": `Bearer ${token}`,
+          }
+        : {}),
       ...(options.headers as Record<string, string> || {}),
     };
 

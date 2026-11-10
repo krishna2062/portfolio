@@ -34,10 +34,12 @@ export function generateToken(user: { id: string; username: string; email: strin
 
 export function verifyAuthWithReason(request: Request): { user: TokenPayload | null; error?: string } {
   const authHeader =
-    request.headers.get("authorization") ||
-    request.headers.get("Authorization") ||
     request.headers.get("x-access-token") ||
-    request.headers.get("X-Access-Token");
+    request.headers.get("X-Access-Token") ||
+    request.headers.get("x-authorization") ||
+    request.headers.get("X-Authorization") ||
+    request.headers.get("authorization") ||
+    request.headers.get("Authorization");
 
   if (!authHeader) {
     const headerKeys = Array.from(request.headers.keys()).join(", ");
