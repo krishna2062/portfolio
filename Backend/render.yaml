@@ -19,3 +19,4 @@ services:
         value: KrishnaPortfolioClient
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
+

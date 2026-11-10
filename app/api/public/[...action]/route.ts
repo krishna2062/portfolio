@@ -161,7 +161,7 @@ export async function GET(
     // 6. EDUCATION
     if (action === "education") {
       const edu = await query<any>(
-        'SELECT "Id" AS id, "Degree" AS degree, "Institution" AS institution, "Status" AS status, "DisplayOrder" AS "displayOrder" FROM "EducationItems" ORDER BY "DisplayOrder"'
+        'SELECT "Id" AS id, "Degree" AS degree, "Institution" AS institution, "Status" AS status, "DisplayOrder" AS "displayOrder" FROM "EducationRecords" WHERE "IsPublished" = true ORDER BY "DisplayOrder"'
       );
       return NextResponse.json(edu);
     }
@@ -225,3 +225,4 @@ export async function POST(
 
   return NextResponse.json({ message: "Endpoint not found" }, { status: 404 });
 }
+

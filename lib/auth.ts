@@ -43,3 +43,4 @@ export function verifyAuth(request: Request): TokenPayload | null {
     return null;
   }
 }
+

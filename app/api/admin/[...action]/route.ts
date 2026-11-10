@@ -30,16 +30,26 @@ export async function GET(
   const third = parts[2];
 
   try {
-    // 1. DASHBOARD STATS
-    if (moduleName === "dashboard" && sub === "stats") {
+    // 1. DASHBOARD STATS / SUMMARY
+    if (moduleName === "dashboard" && (sub === "summary" || sub === "stats" || !sub)) {
       const [pCount] = await query<any>('SELECT count(*) as total, count(*) FILTER (WHERE "IsPublished" = true) as pub, count(*) FILTER (WHERE "IsPublished" = false) as draft FROM "Projects"');
       const [sCount] = await query<any>('SELECT count(*) as total FROM "Services"');
       const [skCount] = await query<any>('SELECT count(*) as total FROM "SkillItems"');
+      const [eduCount] = await query<any>('SELECT count(*) as total FROM "EducationRecords"');
       const [bCount] = await query<any>('SELECT count(*) as total, count(*) FILTER (WHERE "IsPublished" = true) as pub FROM "BlogPosts"');
       const [mCount] = await query<any>('SELECT count(*) as total, count(*) FILTER (WHERE "Status" = \'Unread\') as unread FROM "ContactMessages"');
 
       const recentMessages = await query<any>('SELECT * FROM "ContactMessages" ORDER BY "CreatedAtUtc" DESC LIMIT 5');
       const recentAudits = await query<any>('SELECT * FROM "AuditLogs" ORDER BY "TimestampUtc" DESC LIMIT 8');
+
+      const formattedLogs = recentAudits.map((a) => ({
+        id: String(a.Id),
+        username: a.Username || "admin",
+        action: a.Action || "Updated",
+        entityName: a.EntityName || "System",
+        details: a.Details || "",
+        timestampUtc: a.TimestampUtc,
+      }));
 
       return NextResponse.json({
         totalProjects: parseInt(pCount?.total || "0"),
@@ -47,25 +57,22 @@ export async function GET(
         draftProjects: parseInt(pCount?.draft || "0"),
         totalServices: parseInt(sCount?.total || "0"),
         totalSkills: parseInt(skCount?.total || "0"),
+        totalEducation: parseInt(eduCount?.total || "0"),
         totalBlogs: parseInt(bCount?.total || "0"),
         publishedBlogs: parseInt(bCount?.pub || "0"),
         totalMessages: parseInt(mCount?.total || "0"),
         unreadMessages: parseInt(mCount?.unread || "0"),
         recentMessages: recentMessages.map((m) => ({
-          id: m.Id,
-          name: m.Name,
-          email: m.Email,
-          subject: m.Subject,
-          status: m.Status,
+          id: String(m.Id),
+          name: m.Name || "",
+          email: m.Email || "",
+          subject: m.Subject || "",
+          message: m.Message || "",
+          status: m.Status || "Unread",
           createdAtUtc: m.CreatedAtUtc,
         })),
-        recentActivities: recentAudits.map((a) => ({
-          id: a.Id,
-          action: a.Action,
-          details: a.Details,
-          username: a.Username,
-          timestampUtc: a.TimestampUtc,
-        })),
+        recentLogs: formattedLogs,
+        recentActivities: formattedLogs,
       });
     }
 
@@ -217,13 +224,26 @@ export async function GET(
     // 7. EDUCATION
     if (moduleName === "education") {
       const edu = await query<any>(
-        'SELECT "Id" AS id, "Degree" AS degree, "Institution" AS institution, "Status" AS status, "DisplayOrder" AS "displayOrder" FROM "EducationItems" ORDER BY "DisplayOrder"'
+        'SELECT "Id" AS id, "Degree" AS degree, "Institution" AS institution, "Status" AS status, "DisplayOrder" AS "displayOrder", "IsPublished" AS "isPublished" FROM "EducationRecords" ORDER BY "DisplayOrder"'
       );
       return NextResponse.json(edu);
     }
 
     // 8. BLOGS
     if (moduleName === "blogs") {
+      if (sub && !isNaN(Number(sub))) {
+        const id = Number(sub);
+        const [b] = await query<any>(
+          `SELECT b."Id" AS id, b."Title" AS title, b."Slug" AS slug, b."Summary" AS summary, b."Content" AS content, b."ThumbnailUrl" AS "thumbnailUrl", b."Author" AS author, b."IsPublished" AS "isPublished", b."PublishedAtUtc" AS "publishedAtUtc", b."CreatedAtUtc" AS "createdAtUtc", b."SeoTitle" AS "seoTitle", b."SeoDescription" AS "seoDescription", c."Name" AS category
+           FROM "BlogPosts" b
+           LEFT JOIN "BlogCategories" c ON b."CategoryId" = c."Id"
+           WHERE b."Id" = $1`,
+          [id]
+        );
+        if (!b) return NextResponse.json({ message: "Not found" }, { status: 404 });
+        return NextResponse.json(b);
+      }
+
       const blogs = await query<any>(
         `SELECT b."Id" AS id, b."Title" AS title, b."Slug" AS slug, b."Summary" AS summary, b."Content" AS content, b."ThumbnailUrl" AS "thumbnailUrl", b."Author" AS author, b."IsPublished" AS "isPublished", b."PublishedAtUtc" AS "publishedAtUtc", b."CreatedAtUtc" AS "createdAtUtc", b."SeoTitle" AS "seoTitle", b."SeoDescription" AS "seoDescription", c."Name" AS category
          FROM "BlogPosts" b
@@ -415,16 +435,35 @@ export async function POST(
          VALUES ($1, $2) RETURNING "Id"`,
         [body.category.trim(), Number(body.displayOrder) || 1]
       );
-      return NextResponse.json({ id: res[0].Id });
+      const catId = res[0].Id;
+      if (body.skillNames && Array.isArray(body.skillNames)) {
+        for (let i = 0; i < body.skillNames.length; i++) {
+          const sName = body.skillNames[i];
+          if (sName && sName.trim()) {
+            await query(
+              `INSERT INTO "SkillItems" ("SkillCategoryId", "Name", "DisplayOrder") VALUES ($1, $2, $3)`,
+              [catId, sName.trim(), i + 1]
+            );
+          }
+        }
+      }
+      return NextResponse.json({ id: catId });
     }
 
     // 5. CREATE EDUCATION
     if (moduleName === "education") {
       const body = await request.json();
       const res = await query<any>(
-        `INSERT INTO "EducationItems" ("Degree", "Institution", "Status", "DisplayOrder")
-         VALUES ($1, $2, $3, $4) RETURNING "Id"`,
-        [body.degree.trim(), body.institution.trim(), body.status.trim(), Number(body.displayOrder) || 1]
+        `INSERT INTO "EducationRecords" ("Degree", "Institution", "Status", "DisplayOrder", "IsPublished", "CreatedAtUtc")
+         VALUES ($1, $2, $3, $4, $5, $6) RETURNING "Id"`,
+        [
+          body.degree.trim(),
+          body.institution.trim(),
+          body.status?.trim() || "Completed",
+          Number(body.displayOrder) || 1,
+          body.isPublished !== false,
+          new Date().toISOString(),
+        ]
       );
       return NextResponse.json({ id: res[0].Id });
     }
@@ -623,16 +662,95 @@ export async function PUT(
       return NextResponse.json({ success: true });
     }
 
-    // 5. UPDATE SETTINGS
+    // 5. UPDATE SKILL CATEGORY
+    if (moduleName === "skills" && sub) {
+      const catId = Number(sub);
+      await query(
+        `UPDATE "SkillCategories" SET "Category" = $1, "DisplayOrder" = $2 WHERE "Id" = $3`,
+        [body.category.trim(), Number(body.displayOrder) || 1, catId]
+      );
+      if (body.skillNames && Array.isArray(body.skillNames)) {
+        await query('DELETE FROM "SkillItems" WHERE "SkillCategoryId" = $1', [catId]);
+        for (let i = 0; i < body.skillNames.length; i++) {
+          const sName = body.skillNames[i];
+          if (sName && sName.trim()) {
+            await query(
+              `INSERT INTO "SkillItems" ("SkillCategoryId", "Name", "DisplayOrder") VALUES ($1, $2, $3)`,
+              [catId, sName.trim(), i + 1]
+            );
+          }
+        }
+      }
+      return NextResponse.json({ success: true });
+    }
+
+    // 6. UPDATE EDUCATION
+    if (moduleName === "education" && sub) {
+      const id = Number(sub);
+      await query(
+        `UPDATE "EducationRecords" SET "Degree" = $1, "Institution" = $2, "Status" = $3, "DisplayOrder" = $4, "IsPublished" = $5 WHERE "Id" = $6`,
+        [
+          body.degree.trim(),
+          body.institution.trim(),
+          body.status?.trim() || "Completed",
+          Number(body.displayOrder) || 1,
+          body.isPublished !== false,
+          id,
+        ]
+      );
+      return NextResponse.json({ success: true });
+    }
+
+    // 7. UPDATE BLOG
+    if (moduleName === "blogs" && sub) {
+      const id = Number(sub);
+      const title = body.title.trim();
+      const slug = slugify(body.slug || title);
+      await query(
+        `UPDATE "BlogPosts" SET
+          "Title" = $1, "Slug" = $2, "Summary" = $3, "Content" = $4, "ThumbnailUrl" = $5,
+          "Author" = $6, "IsPublished" = $7, "PublishedAtUtc" = $8, "SeoTitle" = $9, "SeoDescription" = $10,
+          "UpdatedAtUtc" = $11
+         WHERE "Id" = $12`,
+        [
+          title,
+          slug,
+          body.summary || "",
+          body.content || "",
+          body.thumbnailUrl || null,
+          body.author || "Krishna Prasad Bhandari",
+          body.isPublished || false,
+          body.isPublished ? new Date().toISOString() : null,
+          body.seoTitle || null,
+          body.seoDescription || null,
+          new Date().toISOString(),
+          id,
+        ]
+      );
+      return NextResponse.json({ success: true });
+    }
+
+    // 8. UPDATE SETTINGS
     if (moduleName === "settings") {
-      const entries = Object.entries(body);
-      for (const [k, v] of entries) {
+      if (sub) {
+        const key = decodeURIComponent(sub);
+        const val = typeof body.value !== "undefined" ? String(body.value) : String(body);
         await query(
           `INSERT INTO "WebsiteSettings" ("Key", "Value", "UpdatedAtUtc")
            VALUES ($1, $2, $3)
            ON CONFLICT ("Key") DO UPDATE SET "Value" = $2, "UpdatedAtUtc" = $3`,
-          [k, String(v), new Date().toISOString()]
+          [key, val, new Date().toISOString()]
         );
+      } else {
+        const entries = Object.entries(body);
+        for (const [k, v] of entries) {
+          await query(
+            `INSERT INTO "WebsiteSettings" ("Key", "Value", "UpdatedAtUtc")
+             VALUES ($1, $2, $3)
+             ON CONFLICT ("Key") DO UPDATE SET "Value" = $2, "UpdatedAtUtc" = $3`,
+            [k, String(v), new Date().toISOString()]
+          );
+        }
       }
       return NextResponse.json({ success: true });
     }
@@ -709,6 +827,13 @@ export async function PATCH(
       return NextResponse.json({ id, isPublished: next });
     }
 
+    if (moduleName === "education" && action === "publish") {
+      const [e] = await query<any>('SELECT "IsPublished" FROM "EducationRecords" WHERE "Id" = $1', [id]);
+      const next = !e?.IsPublished;
+      await query('UPDATE "EducationRecords" SET "IsPublished" = $1 WHERE "Id" = $2', [next, id]);
+      return NextResponse.json({ id, isPublished: next });
+    }
+
     if (moduleName === "contact" && parts[1] === "messages" && parts[3] === "status") {
       const msgId = parts[2];
       const body = await request.json();
@@ -763,7 +888,7 @@ export async function DELETE(
     }
 
     if (moduleName === "education" && sub) {
-      await query('DELETE FROM "EducationItems" WHERE "Id" = $1', [Number(sub)]);
+      await query('DELETE FROM "EducationRecords" WHERE "Id" = $1', [Number(sub)]);
       return NextResponse.json({ success: true });
     }
 
@@ -803,3 +928,4 @@ export async function DELETE(
     return NextResponse.json({ message: err.message || "Failed delete" }, { status: 500 });
   }
 }
+
