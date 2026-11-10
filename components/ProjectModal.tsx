@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FiX } from "react-icons/fi";
 import { BsArrowRight } from "react-icons/bs";
+import { resolveImageUrl } from "@/lib/api";
 
 export interface ProjectData {
   title: string;
@@ -56,9 +57,10 @@ const ProjectModal = ({ isOpen, onClose, project }: ProjectModalProps) => {
               {/* Hero Image */}
               <div className="relative w-full h-64 sm:h-80">
                 <Image
-                  src={project.path}
+                  src={resolveImageUrl(project.path)}
                   alt={project.title}
                   fill
+                  unoptimized
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#131424] via-transparent to-transparent" />

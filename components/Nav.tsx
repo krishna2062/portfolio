@@ -29,6 +29,10 @@ export const navData: { name: string; path: string; Icon: IconType }[] = [
 const Nav = () => {
   const pathname = usePathname();
 
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
+
   return (
     <nav className="fixed bottom-3 inset-x-0 mx-auto w-[92%] max-w-[420px] h-[58px] z-50 lg:inset-x-auto lg:mx-0 lg:right-6 xl:right-10 lg:top-1/2 lg:-translate-y-1/2 lg:w-16 lg:h-max lg:bottom-auto">
       <div className="flex w-full items-center justify-between px-6 lg:px-0 h-full lg:h-auto py-2 lg:py-8 bg-black/60 lg:bg-white/10 backdrop-blur-md border border-white/10 rounded-full lg:flex-col lg:justify-center lg:gap-y-10 text-2xl lg:text-xl">

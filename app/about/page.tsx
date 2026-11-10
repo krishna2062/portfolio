@@ -1,12 +1,34 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { fadeIn } from '@/variants';
 import CountUp from 'react-countup';
+import { api, PublicAbout, resolveImageUrl } from '@/lib/api';
 
 export default function About() {
-  const [activeTab, setActiveTab] = useState<'experience' | 'status'>('experience');
+  const [activeTab, setActiveTab] = useState<string>('experience');
+  const [aboutData, setAboutData] = useState<PublicAbout | null>(null);
+
+  useEffect(() => {
+    api.getAbout().then((data) => {
+      if (data) {
+        setAboutData(data);
+        if (data.tabs && data.tabs.length > 0) {
+          setActiveTab(data.tabs[0].tabKey);
+        }
+      }
+    });
+  }, []);
+
+  const headline = aboutData?.headline || "Passionate software";
+  const headlineAccent = aboutData?.headlineAccent || "engineer based in Nepal.";
+  const description = aboutData?.description || "Focused on building scalable enterprise solutions, performant REST APIs, clean database designs, and hardware-software telemetry integrations.";
+  const years = aboutData?.yearsOfExperience ?? 2;
+  const projects = aboutData?.completedProjects ?? 10;
+  const tech = aboutData?.techMasteredCount ?? 8;
+
+  const currentTab = aboutData?.tabs?.find((t) => t.tabKey === activeTab);
 
   return (
     <div className="min-h-screen h-auto bg-primary/30 pt-24 lg:pt-36 pb-28 lg:pb-20 px-4 sm:px-8 lg:px-16 flex items-center relative overflow-y-auto overflow-x-hidden">
@@ -21,7 +43,7 @@ export default function About() {
             className="lg:col-span-5 relative w-full h-[300px] sm:h-[400px] lg:h-[550px] rounded-2xl bg-white/5 border border-white/10 flex items-end justify-center overflow-hidden mb-6 lg:mb-0"
           >
             <img 
-              src="/assets/krishna.png" 
+              src={resolveImageUrl(aboutData?.imageUrl || "/assets/krishna.png")} 
               alt="Krishna Prasad Bhandari" 
               className="max-h-full object-contain object-bottom select-none pointer-events-none"
               style={{
@@ -39,31 +61,31 @@ export default function About() {
             className="lg:col-span-7 flex flex-col justify-center space-y-4 lg:space-y-6"
           >
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight">
-              Passionate software <br className="hidden sm:block" />
-              <span className="text-[#f13024]">engineer based in Nepal.</span>
+              {headline} <br className="hidden sm:block" />
+              <span className="text-[#f13024]">{headlineAccent}</span>
             </h2>
 
             <p className="text-white/70 text-sm sm:text-base leading-relaxed">
-              Focused on building scalable enterprise solutions, performant REST APIs, clean database designs, and hardware-software telemetry integrations.
+              {description}
             </p>
 
             {/* Counters */}
             <div className="grid grid-cols-3 gap-2 sm:gap-4 py-4 border-y border-white/10 text-center sm:text-left">
               <div>
                 <h4 className="text-2xl sm:text-3xl font-extrabold text-[#f13024]">
-                  <CountUp start={0} end={2} duration={5} />+
+                  <CountUp start={0} end={years} duration={5} />+
                 </h4>
                 <p className="text-[10px] sm:text-xs uppercase tracking-wider text-white/60 mt-1">Years of Experience</p>
               </div>
               <div>
                 <h4 className="text-2xl sm:text-3xl font-extrabold text-[#f13024]">
-                  <CountUp start={0} end={10} duration={5} />+
+                  <CountUp start={0} end={projects} duration={5} />+
                 </h4>
                 <p className="text-[10px] sm:text-xs uppercase tracking-wider text-white/60 mt-1">Completed Projects</p>
               </div>
               <div>
                 <h4 className="text-2xl sm:text-3xl font-extrabold text-[#f13024]">
-                  <CountUp start={0} end={8} duration={5} />+
+                  <CountUp start={0} end={tech} duration={5} />+
                 </h4>
                 <p className="text-[10px] sm:text-xs uppercase tracking-wider text-white/60 mt-1">Tech Mastered</p>
               </div>
@@ -71,25 +93,46 @@ export default function About() {
 
             {/* Tabs Navigation */}
             <div className="flex gap-4 sm:gap-6 border-b border-white/10 pb-2">
-              <button 
-                onClick={() => setActiveTab('experience')}
-                className={`text-xs sm:text-sm font-semibold pb-1 transition-colors relative ${activeTab === 'experience' ? 'text-[#f13024]' : 'text-white/60 hover:text-white'}`}
-              >
-                Experience
-                {activeTab === 'experience' && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#f13024]" />}
-              </button>
-              <button 
-                onClick={() => setActiveTab('status')}
-                className={`text-xs sm:text-sm font-semibold pb-1 transition-colors relative ${activeTab === 'status' ? 'text-[#f13024]' : 'text-white/60 hover:text-white'}`}
-              >
-                Status
-                {activeTab === 'status' && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#f13024]" />}
-              </button>
+              {aboutData?.tabs && aboutData.tabs.length > 0 ? (
+                aboutData.tabs.map((tab) => (
+                  <button 
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.tabKey)}
+                    className={`text-xs sm:text-sm font-semibold pb-1 transition-colors relative capitalize ${activeTab === tab.tabKey ? 'text-[#f13024]' : 'text-white/60 hover:text-white'}`}
+                  >
+                    {tab.tabKey}
+                    {activeTab === tab.tabKey && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#f13024]" />}
+                  </button>
+                ))
+              ) : (
+                <>
+                  <button 
+                    onClick={() => setActiveTab('experience')}
+                    className={`text-xs sm:text-sm font-semibold pb-1 transition-colors relative ${activeTab === 'experience' ? 'text-[#f13024]' : 'text-white/60 hover:text-white'}`}
+                  >
+                    Experience
+                    {activeTab === 'experience' && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#f13024]" />}
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('status')}
+                    className={`text-xs sm:text-sm font-semibold pb-1 transition-colors relative ${activeTab === 'status' ? 'text-[#f13024]' : 'text-white/60 hover:text-white'}`}
+                  >
+                    Status
+                    {activeTab === 'status' && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#f13024]" />}
+                  </button>
+                </>
+              )}
             </div>
 
             {/* Tab Contents */}
             <div className="pt-2 text-sm text-white/80 min-h-[100px] lg:min-h-[80px]">
-              {activeTab === 'experience' ? (
+              {currentTab ? (
+                <div>
+                  <p className="font-semibold text-white">{currentTab.title}</p>
+                  {currentTab.subtitle && <p className="text-xs text-[#f13024] mt-0.5">{currentTab.subtitle}</p>}
+                  <p className="text-xs text-white/60 mt-2">{currentTab.description}</p>
+                </div>
+              ) : activeTab === 'experience' ? (
                 <div>
                   <p className="font-semibold text-white">Backend Developer & Tech Lead — NeoVertex Solution</p>
                   <p className="text-xs text-[#f13024] mt-0.5">Primary Tech: C#, ASP.NET Core, SQL Server, EF Core</p>

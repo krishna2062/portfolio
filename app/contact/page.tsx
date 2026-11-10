@@ -1,7 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { useState } from "react";
 import toast from "react-hot-toast";
 import { BsArrowRight } from "react-icons/bs";
 import { HiMail, HiPhone, HiLocationMarker, HiGlobeAlt } from "react-icons/hi";
@@ -9,8 +9,10 @@ import { HiMail, HiPhone, HiLocationMarker, HiGlobeAlt } from "react-icons/hi";
 import { fadeIn } from "@/variants";
 import Circles from "@/components/Circles";
 import emailjs from '@emailjs/browser';
+import { api, PublicProfile } from "@/lib/api";
 
 const Contact = () => {
+  const [profile, setProfile] = useState<PublicProfile | null>(null);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -18,6 +20,12 @@ const Contact = () => {
     message: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    api.getProfile().then((data) => {
+      if (data) setProfile(data);
+    });
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -34,32 +42,45 @@ const Contact = () => {
 
     setIsLoading(true);
 
-    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_enwlwan";
-    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "template_hgrnf5r";
-    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "2F8kgU3tj7fxxsicn";
-
     try {
-      await emailjs.send(
-        serviceId,
-        templateId,
-        {
-          name: form.name,
-          email: form.email,
-          subject: form.subject,
-          message: form.message,
-        },
-        publicKey
-      );
+      // 1. Save directly to Supabase Database
+      const dbResult = await api.submitContact(form);
+
+      // 2. Client-side notification via EmailJS if keys are available
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_enwlwan";
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "template_hgrnf5r";
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "2F8kgU3tj7fxxsicn";
+
+      try {
+        await emailjs.send(
+          serviceId,
+          templateId,
+          {
+            name: form.name,
+            email: form.email,
+            subject: form.subject,
+            message: form.message,
+          },
+          publicKey
+        );
+      } catch (emailErr) {
+        console.warn("EmailJS notification optional send error:", emailErr);
+      }
 
       toast.success("Message sent successfully! I’ll get back to you soon.");
       setForm({ name: "", email: "", subject: "", message: "" });
     } catch (error) {
-      console.error('EmailJS Error:', error);
+      console.error('Contact Submission Error:', error);
       toast.error("Unable to send your message right now. Please try again or contact me directly.");
     } finally {
       setIsLoading(false);
     }
   };
+
+  const phone = profile?.phoneWhatsApp || "+977 9867165211";
+  const email = profile?.contactEmail || "krishnabhandari2062@gmail.com";
+  const location = profile?.location || "Butwal, Lumbini Province, Nepal";
+  const domain = profile?.domainEmail ? "krishnabhandari01.com.np" : "krishnabhandari01.com.np";
 
   return (
     <div className="min-h-screen h-auto bg-primary/30 pt-24 lg:pt-36 pb-28 lg:pb-12 flex items-center justify-center relative overflow-y-auto overflow-x-hidden">
@@ -85,7 +106,7 @@ const Contact = () => {
             <div className="space-y-4 pt-2 w-full">
               {/* Phone / WhatsApp */}
               <a 
-                href="https://wa.me/9779867165211" 
+                href={`https://wa.me/${phone.replace(/[^0-9]/g, "")}`} 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="flex items-center gap-4 p-3.5 rounded-xl bg-white/5 border border-white/10 hover:border-[#f13024]/50 transition-colors w-full"
@@ -93,19 +114,19 @@ const Contact = () => {
                 <div className="text-[#f13024] text-2xl"><HiPhone/></div>
                 <div>
                   <p className="text-xs text-white/50">Phone / WhatsApp</p>
-                  <p className="text-sm font-medium text-white">+977 9867165211</p>
+                  <p className="text-sm font-medium text-white">{phone}</p>
                 </div>
               </a>
 
               {/* Email */}
               <a 
-                href="mailto:krishnabhandari2062@gmail.com" 
+                href={`mailto:${email}`} 
                 className="flex items-center gap-4 p-3.5 rounded-xl bg-white/5 border border-white/10 hover:border-[#f13024]/50 transition-colors w-full"
               >
                 <div className="text-[#f13024] text-2xl"><HiMail/></div>
                 <div>
                   <p className="text-xs text-white/50">Email Address</p>
-                  <p className="text-sm font-medium text-white break-all">krishnabhandari2062@gmail.com</p>
+                  <p className="text-sm font-medium text-white break-all">{email}</p>
                 </div>
               </a>
 
@@ -114,7 +135,7 @@ const Contact = () => {
                 <div className="text-[#f13024] text-2xl"><HiLocationMarker/></div>
                 <div>
                   <p className="text-xs text-white/50">Location</p>
-                  <p className="text-sm font-medium text-white">Butwal, Lumbini Province, Nepal</p>
+                  <p className="text-sm font-medium text-white">{location}</p>
                 </div>
               </div>
 
@@ -128,7 +149,7 @@ const Contact = () => {
                 <div className="text-[#f13024] text-2xl"><HiGlobeAlt/></div>
                 <div>
                   <p className="text-xs text-white/50">Website</p>
-                  <p className="text-sm font-medium text-white break-all">krishnabhandari01.com.np</p>
+                  <p className="text-sm font-medium text-white break-all">{domain}</p>
                 </div>
               </a>
             </div>

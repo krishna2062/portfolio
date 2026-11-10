@@ -1,12 +1,14 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 import Circles from "@/components/Circles";
 import Bulb from "@/components/Bulb";
 import { fadeIn } from "@/variants";
+import { api, PublicSkillCategory } from "@/lib/api";
 
-const skillsData = [
+const initialSkillsData = [
   {
     category: "Frontend",
     skills: "React.js, Next.js, HTML5, CSS3, JavaScript (ES6+), Tailwind CSS, Framer Motion",
@@ -34,6 +36,21 @@ const skillsData = [
 ];
 
 const Skills = () => {
+  const [skills, setSkills] = useState<{ category: string; skills: string }[]>(initialSkillsData);
+
+  useEffect(() => {
+    api.getSkills().then((data) => {
+      if (data && data.length > 0) {
+        setSkills(
+          data.map((c) => ({
+            category: c.category,
+            skills: c.skillsJoined || c.skillsList.join(", "),
+          }))
+        );
+      }
+    });
+  }, []);
+
   return (
     <div className="h-full bg-primary/30 py-32 flex items-center">
       <Circles />
@@ -67,7 +84,7 @@ const Skills = () => {
             exit="hidden"
             className="w-full xl:max-w-[65%] grid grid-cols-1 md:grid-cols-2 gap-4"
           >
-            {skillsData.map((item, index) => (
+            {skills.map((item, index) => (
               <div
                 key={index}
                 className="bg-[rgba(65,47,123,0.15)] rounded-lg p-6 hover:bg-[rgba(89,65,169,0.15)] transition-all duration-300 cursor-pointer border border-white/5 hover:border-accent/50"

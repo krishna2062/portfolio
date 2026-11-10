@@ -12,6 +12,10 @@ export default function Template({
 }>) {
   const pathname = usePathname();
 
+  if (pathname?.startsWith("/admin")) {
+    return <div className="h-full">{children}</div>;
+  }
+
   return (
     <AnimatePresence mode="wait">
       <motion.div key={pathname} className="h-full">

@@ -1,12 +1,14 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 import Circles from "@/components/Circles";
 import Bulb from "@/components/Bulb";
 import { fadeIn } from "@/variants";
+import { api, PublicEducation } from "@/lib/api";
 
-const educationData = [
+const initialEducationData = [
   {
     degree: "Bachelor of Engineering in Computer Engineering (BE Computer)",
     institution: "Lumbini Engineering College (Pokhara University)",
@@ -25,6 +27,16 @@ const educationData = [
 ];
 
 const Education = () => {
+  const [education, setEducation] = useState<{ degree: string; institution: string; status: string }[]>(initialEducationData);
+
+  useEffect(() => {
+    api.getEducation().then((data) => {
+      if (data && data.length > 0) {
+        setEducation(data);
+      }
+    });
+  }, []);
+
   return (
     <div className="h-full bg-primary/30 py-32 flex items-center">
       <Circles />
@@ -58,7 +70,7 @@ const Education = () => {
             exit="hidden"
             className="w-full xl:max-w-[65%] flex flex-col gap-6"
           >
-            {educationData.map((item, index) => (
+            {education.map((item, index) => (
               <div
                 key={index}
                 className="bg-[rgba(65,47,123,0.15)] rounded-lg p-6 relative group overflow-hidden border border-white/5 hover:border-accent/50 transition-all duration-300"

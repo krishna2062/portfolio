@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { HiArrowRight } from "react-icons/hi2";
@@ -7,8 +8,16 @@ import ParticlesContainer from "@/components/ParticlesContainer";
 import ProjectsBtn from "@/components/ProjectsBtn";
 import Avatar from "@/components/Avatar";
 import { fadeIn } from "@/variants";
+import { api, PublicProfile } from "@/lib/api";
 
 const Home = () => {
+  const [profile, setProfile] = useState<PublicProfile | null>(null);
+
+  useEffect(() => {
+    api.getProfile().then((data) => {
+      if (data) setProfile(data);
+    });
+  }, []);
   return (
     <div className="relative w-full min-h-screen h-auto overflow-y-auto overflow-x-hidden bg-[#0c0c14] flex flex-col justify-between">
       {/* Background elements */}
@@ -123,7 +132,7 @@ const Home = () => {
               <div className="absolute inset-0 bg-[#f13024]/15 rounded-full blur-2xl pointer-events-none" />
 
               {/* Profile Image with smooth bottom fade */}
-              <Avatar />
+              <Avatar src={profile?.profileImageUrl} />
             </motion.div>
           </div>
 
@@ -140,9 +149,9 @@ const Home = () => {
               exit="hidden"
               className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight"
             >
-              Full Stack Developer <br />
-              & Computer Engineering <br />
-              <span className="text-[#f13024]">Student</span>
+              {profile?.heroTitleLine1 || "Full Stack Developer"} <br />
+              {profile?.heroTitleLine2 || "& Computer Engineering"} <br />
+              <span className="text-[#f13024]">{profile?.heroHighlight || "Student"}</span>
             </motion.h1>
 
             <motion.p
@@ -152,7 +161,7 @@ const Home = () => {
               exit="hidden"
               className="text-sm sm:text-base text-white/70 max-w-[480px] mx-auto lg:mx-0 leading-relaxed my-2"
             >
-              Specializing in high-performance web applications, robust ASP.NET Core backend architecture, modern React interfaces, and hardware telemetry.
+              {profile?.subtitle || "Specializing in high-performance web applications, robust ASP.NET Core backend architecture, modern React interfaces, and hardware telemetry."}
             </motion.p>
 
             {/* CTA Buttons Row */}

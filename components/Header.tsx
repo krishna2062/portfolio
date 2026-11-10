@@ -1,9 +1,18 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import Socials from "@/components/Socials";
 
 export default function Header() {
+  const pathname = usePathname();
+
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
+
   return (
     <header className="absolute z-40 w-full px-4 sm:px-8 lg:px-16 py-4 sm:py-6 flex items-center">
       <div className="container mx-auto max-w-7xl">

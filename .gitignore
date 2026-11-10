@@ -32,6 +32,20 @@ yarn-error.log*
 # vercel
 .vercel
 
+# .NET & Databases
+/Backend/bin/
+/Backend/obj/
+/Backend/appsettings.Development.json
+*.db
+*.db-shm
+*.db-wal
+/Backend/*.db
+/Backend/*.db-shm
+/Backend/*.db-wal
+
+# Screenshots archive
+/screenshots_archive/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
