@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5092";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
 export interface PublicProfile {
   fullName: string;
@@ -113,7 +113,7 @@ export function resolveImageUrl(path?: string | null): string {
   }
   if (trimmed.startsWith("/uploads/") || trimmed.startsWith("uploads/")) {
     const clean = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
-    return `${API_BASE_URL}${clean}`;
+    return API_BASE_URL ? `${API_BASE_URL}${clean}` : clean;
   }
   if (trimmed.startsWith("/")) {
     return trimmed;

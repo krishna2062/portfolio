@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: krishna-portfolio-api
+    env: docker
+    dockerfilePath: Backend/Dockerfile
+    dockerContext: Backend
+    plan: free
+    region: singapore
+    envVars:
+      - key: DatabaseProvider
+        value: PostgreSql
+      - key: ConnectionStrings__DefaultConnection
+        value: Host=aws-0-ap-southeast-1.pooler.supabase.com;Port=5432;Database=postgres;Username=postgres.nojhpfnsuednlozlmlyg;Password=krishna@#$2062;SSL Mode=Require;Trust Server Certificate=true;
+      - key: Jwt__Key
+        value: KrishnaPortfolioSuperSecretSecureKey2026!LongerThan32Chars
+      - key: Jwt__Issuer
+        value: KrishnaPortfolioApi
+      - key: Jwt__Audience
+        value: KrishnaPortfolioClient
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
