@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
-import { verifyAuth } from "@/lib/auth";
+import { verifyAuthWithReason } from "@/lib/auth";
 import fs from "fs/promises";
 import path from "path";
 import bcrypt from "bcryptjs";
@@ -20,8 +20,11 @@ export async function GET(
   request: Request,
   props: { params: Promise<{ action: string[] }> }
 ) {
-  const auth = verifyAuth(request);
-  if (!auth) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  const authRes = verifyAuthWithReason(request);
+  if (!authRes.user) {
+    return NextResponse.json({ message: "Unauthorized", error: authRes.error }, { status: 401 });
+  }
+  const auth = authRes.user;
 
   const params = await props.params;
   const parts = params.action || [];
@@ -325,8 +328,9 @@ export async function POST(
   request: Request,
   props: { params: Promise<{ action: string[] }> }
 ) {
-  const auth = verifyAuth(request);
-  if (!auth) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  const authRes = verifyAuthWithReason(request);
+  if (!authRes.user) return NextResponse.json({ message: "Unauthorized", error: authRes.error }, { status: 401 });
+  const auth = authRes.user;
 
   const params = await props.params;
   const parts = params.action || [];
@@ -547,8 +551,9 @@ export async function PUT(
   request: Request,
   props: { params: Promise<{ action: string[] }> }
 ) {
-  const auth = verifyAuth(request);
-  if (!auth) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  const authRes = verifyAuthWithReason(request);
+  if (!authRes.user) return NextResponse.json({ message: "Unauthorized", error: authRes.error }, { status: 401 });
+  const auth = authRes.user;
 
   const params = await props.params;
   const parts = params.action || [];
@@ -789,8 +794,9 @@ export async function PATCH(
   request: Request,
   props: { params: Promise<{ action: string[] }> }
 ) {
-  const auth = verifyAuth(request);
-  if (!auth) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  const authRes = verifyAuthWithReason(request);
+  if (!authRes.user) return NextResponse.json({ message: "Unauthorized", error: authRes.error }, { status: 401 });
+  const auth = authRes.user;
 
   const params = await props.params;
   const parts = params.action || [];
@@ -851,8 +857,9 @@ export async function DELETE(
   request: Request,
   props: { params: Promise<{ action: string[] }> }
 ) {
-  const auth = verifyAuth(request);
-  if (!auth) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  const authRes = verifyAuthWithReason(request);
+  if (!authRes.user) return NextResponse.json({ message: "Unauthorized", error: authRes.error }, { status: 401 });
+  const auth = authRes.user;
 
   const params = await props.params;
   const parts = params.action || [];
