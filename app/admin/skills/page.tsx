@@ -51,11 +51,23 @@ export default function SkillsAdmin() {
     api
       .authFetch<SkillCategory[]>("/api/admin/skills")
       .then((data) => {
-        setCategories(data);
+        if (Array.isArray(data)) {
+          const formatted: SkillCategory[] = data.map((cat: any) => ({
+            id: cat.id,
+            category: cat.category || "",
+            displayOrder: cat.displayOrder || 1,
+            isActive: cat.isActive !== false,
+            items: Array.isArray(cat.items) ? cat.items : Array.isArray(cat.skills) ? cat.skills : [],
+          }));
+          setCategories(formatted);
+        } else {
+          setCategories([]);
+        }
         setIsLoading(false);
       })
       .catch((err) => {
         toast.error("Failed to load skills: " + err.message);
+        setCategories([]);
         setIsLoading(false);
       });
   };
@@ -76,10 +88,10 @@ export default function SkillsAdmin() {
 
   const openEditModal = (cat: SkillCategory) => {
     setEditingCategory(cat);
-    setCategoryName(cat.category);
-    setDisplayOrder(cat.displayOrder);
-    setIsActive(cat.isActive);
-    setSkillNames(cat.items.map((i) => i.name));
+    setCategoryName(cat.category || "");
+    setDisplayOrder(cat.displayOrder || 1);
+    setIsActive(cat.isActive !== false);
+    setSkillNames((cat.items || []).map((i) => i.name));
     setSkillInput("");
     setIsModalOpen(true);
   };
@@ -225,7 +237,7 @@ export default function SkillsAdmin() {
 
                 {/* Tech Pills */}
                 <div className="flex flex-wrap gap-1.5">
-                  {cat.items.map((item) => (
+                  {(cat.items || []).map((item) => (
                     <span
                       key={item.id}
                       className="bg-slate-50 text-slate-700 text-xs font-medium px-2.5 py-1 rounded-lg border border-slate-200"
@@ -237,9 +249,9 @@ export default function SkillsAdmin() {
               </div>
 
               <div className="flex items-center justify-between pt-3 mt-4 border-t border-slate-100 text-[11px] text-slate-400">
-                <span>{cat.items.length} technologies</span>
-                <span className={cat.isActive ? "text-emerald-600 font-semibold" : "text-slate-400 font-semibold"}>
-                  {cat.isActive ? "Active" : "Disabled"}
+                <span>{(cat.items || []).length} technologies</span>
+                <span className={cat.isActive !== false ? "text-emerald-600 font-semibold" : "text-slate-400 font-semibold"}>
+                  {cat.isActive !== false ? "Active" : "Disabled"}
                 </span>
               </div>
             </div>

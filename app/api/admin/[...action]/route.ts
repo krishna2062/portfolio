@@ -219,6 +219,8 @@ export async function GET(
           id: c.Id,
           category: c.Category,
           displayOrder: c.DisplayOrder,
+          isActive: true,
+          items: itemsMap[c.Id] || [],
           skills: itemsMap[c.Id] || [],
         }))
       );

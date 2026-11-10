@@ -46,11 +46,16 @@ export default function EducationAdmin() {
     api
       .authFetch<EducationItem[]>("/api/admin/education")
       .then((data) => {
-        setRecords(data);
+        if (Array.isArray(data)) {
+          setRecords(data);
+        } else {
+          setRecords([]);
+        }
         setIsLoading(false);
       })
       .catch((err) => {
         toast.error("Failed to load education records: " + err.message);
+        setRecords([]);
         setIsLoading(false);
       });
   };
@@ -64,18 +69,18 @@ export default function EducationAdmin() {
     setDegree("");
     setInstitution("");
     setStatus("Completed");
-    setDisplayOrder(records.length + 1);
+    setDisplayOrder((records?.length || 0) + 1);
     setIsPublished(true);
     setIsModalOpen(true);
   };
 
   const openEditModal = (item: EducationItem) => {
     setEditingRecord(item);
-    setDegree(item.degree);
-    setInstitution(item.institution);
-    setStatus(item.status);
-    setDisplayOrder(item.displayOrder);
-    setIsPublished(item.isPublished);
+    setDegree(item.degree || "");
+    setInstitution(item.institution || "");
+    setStatus(item.status || "Completed");
+    setDisplayOrder(item.displayOrder || 1);
+    setIsPublished(item.isPublished !== false);
     setIsModalOpen(true);
   };
 
@@ -159,7 +164,7 @@ export default function EducationAdmin() {
       <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
         {isLoading ? (
           <div className="p-12 text-center text-slate-400 text-xs font-medium">Loading education...</div>
-        ) : records.length === 0 ? (
+        ) : !records || records.length === 0 ? (
           <div className="p-12 text-center">
             <HiOutlineAcademicCap className="mx-auto text-4xl text-slate-300 mb-2" />
             <p className="text-xs font-semibold text-slate-600">No education records found</p>
@@ -179,7 +184,7 @@ export default function EducationAdmin() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-xs">
-                {records.map((r) => (
+                {(records || []).map((r) => (
                   <tr key={r.id} className="hover:bg-slate-50/50 transition-colors">
                     <td className="py-3.5 px-4 font-mono font-semibold text-slate-500">#{r.displayOrder}</td>
                     <td className="py-3.5 px-4 font-semibold text-slate-900">{r.degree}</td>

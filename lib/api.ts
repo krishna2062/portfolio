@@ -219,7 +219,9 @@ export const api = {
 
     if (res.status === 401 && typeof window !== "undefined") {
       this.removeToken();
-      window.location.href = "/admin/login";
+      if (!window.location.pathname.startsWith("/admin/login")) {
+        window.location.href = "/admin/login";
+      }
       throw new Error("Unauthorized");
     }
 
