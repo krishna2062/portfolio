@@ -10,6 +10,7 @@ interface ProfileData {
   id: number;
   fullName: string;
   brandTitle: string;
+  logoUrl?: string;
   heroTitleLine1: string;
   heroTitleLine2: string;
   heroHighlight: string;
@@ -156,6 +157,16 @@ export default function ProfileAdmin() {
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none"
               />
             </div>
+          </div>
+
+          {/* Website Header Logo */}
+          <div className="p-4 bg-slate-50 border border-slate-200/90 rounded-2xl">
+            <AdminImagePicker
+              label="Website Header Logo (Upload PNG/SVG/JPG or Paste URL)"
+              value={profile.logoUrl || "/assets/logo.png"}
+              onChange={(url) => setProfile({ ...profile, logoUrl: url })}
+              recommendedSize="Transparent PNG or SVG, Square (e.g. 200x200px or 512x512px)"
+            />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

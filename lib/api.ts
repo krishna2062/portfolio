@@ -3,6 +3,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
 export interface PublicProfile {
   fullName: string;
   brandTitle: string;
+  logoUrl?: string;
   heroTitleLine1: string;
   heroTitleLine2: string;
   heroHighlight: string;
@@ -141,6 +142,10 @@ export const api = {
 
   async getProfile(): Promise<PublicProfile | null> {
     return fetchJson<PublicProfile>("/api/public/profile");
+  },
+
+  async getSettings(): Promise<Record<string, string> | null> {
+    return fetchJson<Record<string, string>>("/api/public/settings");
   },
 
   async getAbout(): Promise<PublicAbout | null> {

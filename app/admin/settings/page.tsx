@@ -9,7 +9,8 @@ import {
   HiOutlineCheck,
   HiOutlineUserCircle,
 } from "react-icons/hi2";
-import { api } from "@/lib/api";
+import { api, resolveImageUrl } from "@/lib/api";
+import AdminImagePicker from "@/components/AdminImagePicker";
 
 interface WebsiteSetting {
   key: string;
@@ -175,6 +176,38 @@ export default function SettingsAdmin() {
           <div className="p-8 text-center text-slate-400 text-xs">Loading settings...</div>
         ) : (
           <form onSubmit={handleSaveAllSettings} className="space-y-4">
+            {/* Website Logo Picker */}
+            <div className="p-4 bg-slate-50/80 border border-slate-200/90 rounded-2xl space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h3 className="text-xs font-bold text-slate-900">Website Header Logo</h3>
+                  <p className="text-[11px] text-slate-500 mt-0.5">
+                    Upload an image file from your device (PNG, SVG, JPG) or enter an external image URL to display on the public header.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2.5 px-3 py-1.5 bg-slate-900 rounded-xl border border-slate-800 self-start sm:self-auto">
+                  <span className="text-[10px] font-semibold text-slate-400">Header Preview:</span>
+                  <div className="w-7 h-7 flex items-center justify-center">
+                    <img
+                      src={resolveImageUrl(settings["LogoUrl"] || "/assets/logo.png")}
+                      alt="Logo Preview"
+                      className="max-w-full max-h-full object-contain drop-shadow-sm"
+                    />
+                  </div>
+                  <span className="text-xs font-bold text-white tracking-tight">
+                    {settings["BrandTitle"] || "Krishna"}<span className="text-[#f13024]">.</span>
+                  </span>
+                </div>
+              </div>
+
+              <AdminImagePicker
+                label="Header Logo (Upload or Paste URL)"
+                value={settings["LogoUrl"] || "/assets/logo.png"}
+                onChange={(val) => handleSettingChange("LogoUrl", val)}
+                recommendedSize="Transparent PNG or SVG, Square (e.g. 200x200px or 512x512px)"
+              />
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">Portfolio Title</label>

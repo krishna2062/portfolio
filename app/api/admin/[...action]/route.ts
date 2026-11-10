@@ -85,11 +85,13 @@ export async function GET(
       if (profiles.length === 0) return NextResponse.json(null);
       const p = profiles[0];
       const socials = await query<any>('SELECT * FROM "SocialLinks" WHERE "ProfileId" = $1 ORDER BY "DisplayOrder"', [p.Id]);
+      const [logoSetting] = await query<any>('SELECT "Value" FROM "WebsiteSettings" WHERE "Key" = \'LogoUrl\' LIMIT 1');
 
       return NextResponse.json({
         id: p.Id,
         fullName: p.FullName,
         brandTitle: p.BrandTitle,
+        logoUrl: logoSetting?.Value || "/assets/logo.png",
         heroTitleLine1: p.HeroTitleLine1,
         heroTitleLine2: p.HeroTitleLine2,
         heroHighlight: p.HeroHighlight,
@@ -352,20 +354,26 @@ export async function POST(
 
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
+      const mimeType = file.type || "image/png";
 
-      const ext = path.extname(file.name) || ".png";
-      const safeName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}${ext.toLowerCase()}`;
-      
-      const uploadDir = path.join(process.cwd(), "public", "uploads");
-      await fs.mkdir(uploadDir, { recursive: true });
-      await fs.writeFile(path.join(uploadDir, safeName), buffer);
-
-      const relativeUrl = `/uploads/${safeName}`;
+      let relativeUrl = "";
+      try {
+        const ext = path.extname(file.name) || ".png";
+        const safeName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}${ext.toLowerCase()}`;
+        const uploadDir = path.join(process.cwd(), "public", "uploads");
+        await fs.mkdir(uploadDir, { recursive: true });
+        await fs.writeFile(path.join(uploadDir, safeName), buffer);
+        relativeUrl = `/uploads/${safeName}`;
+      } catch {
+        // Fallback for serverless read-only environments
+        const base64 = buffer.toString("base64");
+        relativeUrl = `data:${mimeType};base64,${base64}`;
+      }
 
       await query(
         `INSERT INTO "MediaAssets" ("Id", "OriginalFileName", "RelativeUrl", "MimeType", "FileSizeBytes", "AltText", "UploadedAtUtc")
          VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6)`,
-        [file.name, relativeUrl, file.type || "image/png", file.size, altText || file.name, new Date().toISOString()]
+        [file.name, relativeUrl.slice(0, 500), mimeType, file.size, altText || file.name, new Date().toISOString()]
       );
 
       return NextResponse.json({
@@ -589,6 +597,16 @@ export async function PUT(
           new Date().toISOString(),
         ]
       );
+
+      if (body.logoUrl) {
+        await query(
+          `INSERT INTO "WebsiteSettings" ("Key", "Value", "UpdatedAtUtc")
+           VALUES ('LogoUrl', $1, $2)
+           ON CONFLICT ("Key") DO UPDATE SET "Value" = $1, "UpdatedAtUtc" = $2`,
+          [body.logoUrl, new Date().toISOString()]
+        );
+      }
+
       return NextResponse.json({ success: true });
     }
 

@@ -26,9 +26,12 @@ export async function GET(
         [p.Id]
       );
 
+      const [logoSetting] = await query<any>('SELECT "Value" FROM "WebsiteSettings" WHERE "Key" = \'LogoUrl\' LIMIT 1');
+
       return NextResponse.json({
         fullName: p.FullName,
         brandTitle: p.BrandTitle,
+        logoUrl: logoSetting?.Value || "/assets/logo.png",
         heroTitleLine1: p.HeroTitleLine1,
         heroTitleLine2: p.HeroTitleLine2,
         heroHighlight: p.HeroHighlight,
@@ -176,6 +179,16 @@ export async function GET(
          ORDER BY b."PublishedAtUtc" DESC NULLS LAST, b."CreatedAtUtc" DESC`
       );
       return NextResponse.json(blogs);
+    }
+
+    // 8. SETTINGS
+    if (action === "settings") {
+      const settings = await query<any>('SELECT "Key" as key, "Value" as value FROM "WebsiteSettings"');
+      const map: Record<string, string> = {};
+      settings.forEach((s) => {
+        map[s.key] = s.value;
+      });
+      return NextResponse.json(map);
     }
 
     return NextResponse.json({ message: "Endpoint not found" }, { status: 404 });
