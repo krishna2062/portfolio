@@ -198,7 +198,7 @@ export default function SettingsAdmin() {
     settings["SiteDescription"] ||
     "Official portfolio of Krishna Prasad Bhandari - Full-Stack Software Engineer specializing in Next.js, React, Node.js, and ASP.NET Core cloud architectures based in Nepal.";
   const currentUrl = (settings["CanonicalUrl"] || "https://krishnabhandari01.com.np").replace(/\/$/, "");
-  const currentOgImage = resolveImageUrl(settings["OgImageUrl"] || settings["LogoUrl"] || "/assets/logo.png");
+  const currentOgImage = resolveImageUrl(settings["OgImageUrl"] || settings["LogoUrl"] || "/assets/logo.svg");
   const currentKeywords = (
     settings["MetaKeywords"] ||
     "Krishna Prasad Bhandari, Full Stack Developer Nepal, React Developer, Next.js Developer, ASP.NET Core"
@@ -256,7 +256,7 @@ export default function SettingsAdmin() {
             <div className="flex items-center gap-2 text-xs text-slate-600 mb-1">
               <div className="w-4 h-4 rounded-full overflow-hidden bg-slate-100 shrink-0">
                 <img
-                  src={resolveImageUrl(settings["LogoUrl"] || "/assets/logo.png")}
+                  src={resolveImageUrl(settings["LogoUrl"] || "/assets/logo.svg")}
                   alt="Favicon"
                   className="w-full h-full object-contain"
                 />
@@ -556,7 +556,7 @@ export default function SettingsAdmin() {
                   <span className="text-[10px] font-semibold text-slate-400">Header Preview:</span>
                   <div className="w-7 h-7 flex items-center justify-center">
                     <img
-                      src={resolveImageUrl(settings["LogoUrl"] || "/assets/logo.png")}
+                      src={resolveImageUrl(settings["LogoUrl"] || "/assets/logo.svg")}
                       alt="Logo Preview"
                       className="max-w-full max-h-full object-contain drop-shadow-sm"
                     />
@@ -569,7 +569,7 @@ export default function SettingsAdmin() {
 
               <AdminImagePicker
                 label="Header Logo (Upload or Paste URL)"
-                value={settings["LogoUrl"] || "/assets/logo.png"}
+                value={settings["LogoUrl"] || "/assets/logo.svg"}
                 onChange={(val) => handleSettingChange("LogoUrl", val)}
                 recommendedSize="Transparent PNG or SVG, Square (e.g. 200x200px or 512x512px)"
               />

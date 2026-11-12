@@ -115,9 +115,9 @@ export async function generateMetadata(): Promise<Metadata> {
       other: bingVerification ? { "msvalidate.01": bingVerification } : undefined,
     },
     icons: {
-      icon: settings["LogoUrl"] || "/assets/logo.png",
-      shortcut: settings["LogoUrl"] || "/assets/logo.png",
-      apple: settings["LogoUrl"] || "/assets/logo.png",
+      icon: settings["LogoUrl"] || "/assets/logo.svg",
+      shortcut: settings["LogoUrl"] || "/assets/logo.svg",
+      apple: settings["LogoUrl"] || "/assets/logo.svg",
     },
     other: {
       "theme-color": settings["ThemeColor"] || "#f13024",

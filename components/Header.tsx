@@ -9,7 +9,7 @@ import { api, resolveImageUrl } from "@/lib/api";
 
 export default function Header() {
   const pathname = usePathname();
-  const [logoUrl, setLogoUrl] = useState<string>("/assets/logo.png");
+  const [logoUrl, setLogoUrl] = useState<string>("/assets/logo.svg");
   const [brandTitle, setBrandTitle] = useState<string>("Krishna");
 
   useEffect(() => {

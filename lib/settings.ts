@@ -20,7 +20,7 @@ export const DEFAULT_SEO_SETTINGS = {
   BingSiteVerification: "",
   RobotsDirective: "index, follow",
   ThemeColor: "#f13024",
-  LogoUrl: "/assets/logo.png",
+  LogoUrl: "/assets/logo.svg",
   GoogleAnalyticsId: "G-RE7ER17RWK",
   ContactEmail: "krrishbhandari2062@gmail.com",
   DomainEmail: "info@krishnabhandari01.com.np",
