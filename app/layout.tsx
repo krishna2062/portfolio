@@ -49,7 +49,16 @@ export async function generateMetadata(): Promise<Metadata> {
     : `${canonicalUrl}${ogImageRaw.startsWith("/") ? "" : "/"}${ogImageRaw}`;
 
   const twitterHandle = settings["TwitterHandle"] || "@krishnabhandari";
-  const googleVerification = settings["GoogleSiteVerification"]?.trim() || "";
+  let googleVerification = settings["GoogleSiteVerification"]?.trim() || "";
+  const tagMatch = googleVerification.match(/content=["']([^"']+)["']/i);
+  if (tagMatch) {
+    googleVerification = tagMatch[1];
+  } else if (googleVerification.includes(".html")) {
+    googleVerification = "";
+  } else {
+    googleVerification = googleVerification.replace(/^google-site-verification[:=]\s*/i, "").trim();
+  }
+
   const bingVerification = settings["BingSiteVerification"]?.trim() || "";
   const isNoIndex = (settings["RobotsDirective"] || "").toLowerCase().includes("noindex");
 

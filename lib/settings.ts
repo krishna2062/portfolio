@@ -45,3 +45,4 @@ export async function getWebsiteSettings(): Promise<WebsiteSettingsMap> {
     return { ...DEFAULT_SEO_SETTINGS };
   }
 }
+
