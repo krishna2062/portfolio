@@ -42,27 +42,23 @@
     "typescript": "^6.0.3"
   },
   "author": {
-    "name": "Sanidhya Kumar Verma",
-    "email": "sanidhyyy@gmail.com",
-    "url": "https://github.com/sanidhyy"
+    "name": "Krishna Prasad Bhandari",
+    "email": "krrishbhandari2062@gmail.com",
+    "url": "https://krishnabhandari01.com.np"
   },
-  "description": "Ethan Smith is a Full-stack web developer with 10+ years of experience.",
+  "description": "Krishna Prasad Bhandari - Full-Stack Software Engineer specializing in Next.js, React, and ASP.NET Core.",
   "keywords": [
+    "krishna",
+    "krishna prasad bhandari",
+    "full stack developer",
+    "software engineer nepal",
     "react",
-    "next",
     "nextjs",
     "typescript",
-    "html",
-    "css",
-    "tailwindcss",
-    "modern-ui",
-    "modern-ux",
-    "portfolio",
-    "framer-motion",
-    "react-hot-toast",
-    "resend",
-    "3d-website",
-    "particle-effect"
+    "aspnet core",
+    "supabase",
+    "postgresql",
+    "portfolio"
   ],
   "license": "MIT",
   "repository": {

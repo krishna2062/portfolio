@@ -2,7 +2,7 @@ import { Pool } from "pg";
 
 const connectionString =
   process.env.DATABASE_URL ||
-  "postgresql://postgres.nojhpfnsuednlozlmlyg:krishna%40%23%242062@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres";
+  "postgresql://postgres.nojhpfnsuednlozlmlyg:krishna%40%23%242062@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres";
 
 const globalForPool = globalThis as unknown as { pool: Pool };
 
@@ -11,8 +11,8 @@ export const pool =
   new Pool({
     connectionString,
     ssl: { rejectUnauthorized: false },
-    max: 10,
-    idleTimeoutMillis: 30000,
+    max: 3,
+    idleTimeoutMillis: 10000,
     connectionTimeoutMillis: 10000,
   });
 
